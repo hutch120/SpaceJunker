@@ -41,7 +41,7 @@ export default function App () {
         invalidateFrameloop
       >
         <fog attach="fog" args={['#070710', 100, 700]} />
-        <ambientLight intensity={0.25} />
+        <ambientLight intensity={0.5} />
         {/* <Stars />
         <Explosions />
          <Track />

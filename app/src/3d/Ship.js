@@ -119,7 +119,7 @@ export default function Ship () {
           </mesh>
           <mesh name="Renault_(S,_T1)_4">
             <bufferGeometry attach="geometry" {...gltf.__$[9].geometry} />
-            <meshBasicMaterial attach="material" color="white" />
+            <meshBasicMaterial attach="material" color="#1522bf" />
           </mesh>
           <mesh name="Renault_(S,_T1)_5">
             <bufferGeometry attach="geometry" {...gltf.__$[10].geometry} />
