@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-import useStore from '../store'
+import useStore from '../store/Store'
 
 export default function Particles () {
   const instancedMesh = useRef()

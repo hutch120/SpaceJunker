@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 import React, { useEffect, useMemo, useRef } from 'react'
-import useStore, { audio, playAudio } from '../store'
+import useStore, { audio, playAudio } from '../store/Store'
 
 import { useFrame } from 'react-three-fiber'
 

@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 
-import React, { useRef } from 'react'
-import { useFrame, useLoader } from 'react-three-fiber'
+import React, { useEffect, useRef } from 'react'
+import { useFrame, useLoader, useThree } from 'react-three-fiber'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import useStore from '../store'
+import useStore from '../store/Store'
 
 const geometry = new THREE.BoxBufferGeometry(1, 1, 40)
 const lightgreen = new THREE.Color('lightgreen')
@@ -17,40 +17,53 @@ const direction = new THREE.Vector3()
 export default function Ship () {
   const gltf = useLoader(GLTFLoader, '/ship.gltf')
   const mutation = useStore(state => state.mutation)
+
+  const isPaused = useStore(state => state.isPaused)
+
   const { clock, mouse, ray } = mutation
   const lasers = useStore(state => state.lasers)
+
   const main = useRef()
   const laserGroup = useRef()
   const laserLight = useRef()
-  const exhaust = useRef()
+  // const exhaust = useRef()
   const cross = useRef()
   const target = useRef()
+  const { invalidate } = useThree()
 
-  useFrame(() => {
-    main.current.position.z = Math.sin(clock.getElapsedTime() * 40) * Math.PI * 0.1
-    main.current.rotation.z += (mouse.x / 500 - main.current.rotation.z) * 0.1
-    main.current.rotation.x += (-mouse.y / 1200 - main.current.rotation.x) * 0.1
-    main.current.rotation.y += (-mouse.x / 1200 - main.current.rotation.y) * 0.1
-    main.current.position.x += (mouse.x / 10 - main.current.position.x) * 0.1
-    main.current.position.y += (25 + -mouse.y / 10 - main.current.position.y) * 0.1
-    exhaust.current.scale.x = 1 + Math.sin(clock.getElapsedTime() * 200)
-    exhaust.current.scale.y = 1 + Math.sin(clock.getElapsedTime() * 200)
-    for (let i = 0; i < lasers.length; i++) {
-      const group = laserGroup.current.children[i]
-      group.position.z -= 20
+  useEffect(() => {
+    if (!isPaused) invalidate()
+  }, [isPaused, invalidate])
+
+  useFrame(({ gl, scene, camera }) => {
+    gl.render(scene, camera)
+    if (main.current) {
+      main.current.position.z = Math.sin(clock.getElapsedTime() * 40) * Math.PI * 0.1
+      main.current.rotation.z += (mouse.x / 500 - main.current.rotation.z) * 0.1
+      main.current.rotation.x += (-mouse.y / 1200 - main.current.rotation.x) * 0.1
+      main.current.rotation.y += (-mouse.x / 1200 - main.current.rotation.y) * 0.1
+      main.current.position.x += (mouse.x / 10 - main.current.position.x) * 0.1
+      main.current.position.y += (25 + -mouse.y / 10 - main.current.position.y) * 0.1
+      // exhaust.current.scale.x = 1 + Math.sin(clock.getElapsedTime() * 200)
+      // exhaust.current.scale.y = 1 + Math.sin(clock.getElapsedTime() * 200)
+      for (let i = 0; i < lasers.length; i++) {
+        const group = laserGroup.current.children[i]
+        group.position.z -= 20
+      }
+      laserLight.current.intensity += ((lasers.length && Date.now() - lasers[lasers.length - 1] < 100 ? 20 : 0) - laserLight.current.intensity) * 0.3
+
+      // Get ships orientation and save it to the stores ray
+      main.current.getWorldPosition(position)
+      main.current.getWorldDirection(direction)
+      ray.origin.copy(position)
+      ray.direction.copy(direction.negate())
+
+      // ...
+      crossMaterial.color = mutation.hits ? lightgreen : hotpink
+      cross.current.visible = !mutation.hits
+      target.current.visible = !!mutation.hits
     }
-    laserLight.current.intensity += ((lasers.length && Date.now() - lasers[lasers.length - 1] < 100 ? 20 : 0) - laserLight.current.intensity) * 0.3
-
-    // Get ships orientation and save it to the stores ray
-    main.current.getWorldPosition(position)
-    main.current.getWorldDirection(direction)
-    ray.origin.copy(position)
-    ray.direction.copy(direction.negate())
-
-    // ...
-    crossMaterial.color = mutation.hits ? lightgreen : hotpink
-    cross.current.visible = !mutation.hits
-    target.current.visible = !!mutation.hits
+    if (!isPaused) invalidate()
   })
 
   return (
@@ -114,10 +127,10 @@ export default function Ship () {
           </mesh>
         </group>
       </group>
-      <mesh ref={exhaust} scale={[1, 1, 30]} position={[0, 1, 30]}>
+      {/* <mesh ref={exhaust} scale={[1, 1, 30]} position={[0, 1, 30]}>
         <dodecahedronBufferGeometry attach="geometry" args={[1.5, 0]} />
         <meshBasicMaterial attach="material" color="lightblue" />
-      </mesh>
+          </mesh> */}
     </group>
   )
 }

@@ -1,7 +1,8 @@
 import React, { useRef } from 'react'
 import { useFrame, useThree } from 'react-three-fiber'
 
-import useStore from '../store'
+import PropTypes from 'prop-types'
+import useStore from '../store/Store'
 
 let offset = 0
 export default function Rig ({ children }) {
@@ -43,4 +44,8 @@ export default function Rig ({ children }) {
       </group>
     </group>
   )
+}
+
+Rig.propTypes = {
+  children: PropTypes.element
 }

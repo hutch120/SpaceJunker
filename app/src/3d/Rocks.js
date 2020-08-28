@@ -2,15 +2,17 @@ import React, { useRef } from 'react'
 import { useFrame, useLoader } from 'react-three-fiber'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import useStore from '../store'
+import PropTypes from 'prop-types'
+import useStore from '../store/Store'
 
 export default function Rocks () {
   const gltf = useLoader(GLTFLoader, '/rock.gltf')
   const rocks = useStore(state => state.rocks)
-  return rocks.map(data => <Rock gltf={gltf} key={data.guid} data={data} />)
+  return rocks.map(data => <RockMemo gltf={gltf} key={data.guid} data={data} />)
 }
 
-const Rock = React.memo(({ gltf, data }) => {
+const RockMemo = React.memo(Rock)
+function Rock ({ gltf, data }) {
   const ref = useRef()
   const { clock } = useStore(state => state.mutation)
   useFrame(() => {
@@ -30,4 +32,9 @@ const Rock = React.memo(({ gltf, data }) => {
       </object3D>
     </group>
   )
-})
+}
+
+Rock.propTypes = {
+  gltf: PropTypes.object,
+  data: PropTypes.object
+}

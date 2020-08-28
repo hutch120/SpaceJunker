@@ -4,24 +4,28 @@ import React, { Suspense } from 'react'
 
 import { Canvas } from 'react-three-fiber'
 import Effects from './3d/Effects'
-import Enemies from './3d/Enemies'
-import Explosions from './3d/Explosions'
+// import Enemies from './3d/Enemies'
 import Hud from './Hud'
-import Particles from './3d/Particles'
 import Planets from './3d/Planets'
 import Rig from './3d/Rig'
-import Rings from './3d/Rings'
 import Rocks from './3d/Rocks'
 import Ship from './3d/Ship'
+import UserInput from './store/UserInput'
+import useStore from './store/Store'
+
+/* import Explosions from './3d/Explosions'
+import Particles from './3d/Particles'
+import Rings from './3d/Rings'
 import Stars from './3d/Stars'
-import Track from './3d/Track'
-import useStore from './store'
+import Track from './3d/Track' */
 
 export default function App () {
   const { fov } = useStore((state) => state.mutation)
   const actions = useStore((state) => state.actions)
+
   return (
     <>
+      <UserInput />
       <Canvas
         concurrent
         gl={{ antialias: false }}
@@ -34,18 +38,20 @@ export default function App () {
           gl.toneMapping = THREE.Uncharted2ToneMapping
           gl.setClearColor(new THREE.Color('#020209'))
         }}
+        invalidateFrameloop
       >
         <fog attach="fog" args={['#070710', 100, 700]} />
         <ambientLight intensity={0.25} />
-        <Stars />
+        {/* <Stars />
         <Explosions />
-        <Track />
+         <Track />
         <Particles />
         <Rings />
+        */}
         <Suspense fallback={null}>
           <Rocks />
           <Planets />
-          <Enemies />
+          {/* <Enemies /> */}
           <Rig>
             <Ship />
           </Rig>

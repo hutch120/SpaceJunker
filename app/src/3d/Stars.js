@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react'
 
+import PropTypes from 'prop-types'
+
 export default function Stars ({ count = 2000 }) {
   const positions = useMemo(() => {
     const positions = []
@@ -24,4 +26,8 @@ export default function Stars ({ count = 2000 }) {
       <pointsMaterial attach="material" size={15} sizeAttenuation color="white" fog={false} />
     </points>
   )
+}
+
+Stars.propTypes = {
+  count: PropTypes.number
 }

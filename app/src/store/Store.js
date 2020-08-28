@@ -1,11 +1,16 @@
 import * as THREE from 'three'
-import * as audio from './audio'
+import * as audio from '../audio'
 
 import { Curves } from 'three/examples/jsm/curves/CurveExtras'
 import { addEffect } from 'react-three-fiber'
 import create from 'zustand'
 
 let guid = 1
+
+var isPaused = true
+if (process.env.NODE_ENV === 'production') {
+  isPaused = false
+}
 
 const [useStore, api] = create((set, get) => {
   const spline = new Curves.GrannyKnot()
@@ -15,6 +20,9 @@ const [useStore, api] = create((set, get) => {
   const box = new THREE.Box3()
 
   return {
+    isPaused, /* Pause at start in development */
+    togglePause: () => set({ isPaused: !get().isPaused }),
+    getPaused: () => { return get().isPaused },
     sound: false,
     camera: undefined,
     points: 0,
@@ -35,7 +43,7 @@ const [useStore, api] = create((set, get) => {
       hits: false,
       rings: randomRings(30, track),
       particles: randomData(1500, track, 100, 1, () => 0.5 + Math.random() * 0.8),
-      looptime: 40 * 1000,
+      looptime: 80 * 1000,
       binormal: new THREE.Vector3(),
       normal: new THREE.Vector3(),
       clock: new THREE.Clock(false),
@@ -57,7 +65,6 @@ const [useStore, api] = create((set, get) => {
 
         addEffect(() => {
           const { rocks, enemies } = get()
-
           const time = Date.now()
           const t = (mutation.t = ((time - mutation.startTime) % mutation.looptime) / mutation.looptime)
           mutation.position = track.parameters.path.getPointAt(t)

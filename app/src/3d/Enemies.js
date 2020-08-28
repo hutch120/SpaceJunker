@@ -4,18 +4,20 @@ import React, { useRef } from 'react'
 import { useFrame, useLoader } from 'react-three-fiber'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import useStore from '../store'
+import PropTypes from 'prop-types'
+import useStore from '../store/Store'
 
 export default function Enemies () {
   const enemies = useStore(state => state.enemies)
-  return enemies.map((data, i) => <Drone key={i} data={data} />)
+  return enemies.map((data, i) => <DroneMemo key={i} data={data} />)
 }
 
 const box = new THREE.Box3()
 box.setFromCenterAndSize(new THREE.Vector3(0, 0, 1), new THREE.Vector3(3, 3, 3))
 const glowMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color('lightblue') })
 
-const Drone = React.memo(({ data }) => {
+const DroneMemo = React.memo(Drone)
+function Drone ({ data }) {
   const { clock } = useStore(state => state.mutation)
   const gltf = useLoader(GLTFLoader, '/drone.gltf')
   const ref = useRef()
@@ -41,4 +43,8 @@ const Drone = React.memo(({ data }) => {
       </mesh>
     </group>
   )
-})
+}
+
+Drone.propTypes = {
+  data: PropTypes.object
+}

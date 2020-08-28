@@ -1,35 +1,38 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 
-import useStore from './store'
+import useStore from './store/Store'
 
 export default function Hud () {
+  const getPaused = useStore(state => state.getPaused)
+  const isPaused = useStore(state => state.isPaused)
   const points = useStore(state => state.points)
   const health = useStore(state => state.health)
   const sound = useStore(state => state.sound)
-  const toggle = useStore(state => state.actions.toggleSound)
+  const toggleSound = useStore(state => state.actions.toggleSound)
 
   const seconds = useRef()
   useEffect(() => {
     const t = Date.now()
-    const i = setInterval(() => (seconds.current.innerText = ((Date.now() - t) / 1000).toFixed(1)), 100)
+    const i = setInterval(() => {
+      if (getPaused()) return
+      (seconds.current.innerText = ((Date.now() - t) / 1000).toFixed(1)) // TODO: Dont use Date.now()... use internal tick.
+    }, 100)
     return () => clearInterval(i)
-  }, [])
+  }, [getPaused])
 
   const score = useMemo(() => (points >= 1000 ? (points / 1000).toFixed(1) + 'K' : points), [points])
   return (
     <>
-      <UpperLeft onClick={() => toggle()}>
+      <UpperLeft onClick={() => toggleSound()}>
         sound
         <br />
         {sound ? 'off' : 'on'}
       </UpperLeft>
       <UpperRight>
-        <a href="https://codesandbox.io/s/react-three-fiber-untitled-game-4pp5r">source</a>
-        <br />
-        <a href="https://twitter.com/0xca0a">twitter</a>
-        <br />
-        <a href="https://github.com/react-spring/react-three-fiber">github</a>
+        {!isPaused
+          ? <h2>ESC pause</h2> : <h2>ESC unpause</h2>
+        }
       </UpperRight>
       <LowerLeft>
         <h2 ref={seconds}>0.0</h2>
