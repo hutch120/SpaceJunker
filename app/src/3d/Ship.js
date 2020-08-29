@@ -38,12 +38,16 @@ export default function Ship () {
   useFrame(({ gl, scene, camera }) => {
     gl.render(scene, camera)
     if (main.current) {
-      main.current.position.z = Math.sin(clock.getElapsedTime() * 40) * Math.PI * 0.1
+      // Gives ship an (annoying) wobble back/forward
+      // main.current.position.z = Math.sin(clock.getElapsedTime() * 40) * Math.PI * 0.1
       main.current.rotation.z += (mouse.x / 500 - main.current.rotation.z) * 0.1
+
       main.current.rotation.x += (-mouse.y / 1200 - main.current.rotation.x) * 0.1
-      main.current.rotation.y += (-mouse.x / 1200 - main.current.rotation.y) * 0.1
       main.current.position.x += (mouse.x / 10 - main.current.position.x) * 0.1
+
+      main.current.rotation.y += (-mouse.x / 1200 - main.current.rotation.y) * 0.1
       main.current.position.y += (25 + -mouse.y / 10 - main.current.position.y) * 0.1
+
       // exhaust.current.scale.x = 1 + Math.sin(clock.getElapsedTime() * 200)
       // exhaust.current.scale.y = 1 + Math.sin(clock.getElapsedTime() * 200)
       for (let i = 0; i < lasers.length; i++) {

@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import * as audio from '../audio'
 
 import { Curves } from 'three/examples/jsm/curves/CurveExtras'
+import { Vector3 } from 'three'
 import { addEffect } from 'react-three-fiber'
 import create from 'zustand'
 
@@ -34,6 +35,9 @@ const [useStore, api] = create((set, get) => {
 
     mutation: {
       t: 0,
+      acceleration: 0,
+      rotation: 0,
+      postionIncrementDistance: 10,
       position: new THREE.Vector3(),
       startTime: Date.now(),
 
@@ -52,7 +56,11 @@ const [useStore, api] = create((set, get) => {
       // Re-usable objects
       dummy: new THREE.Object3D(),
       ray: new THREE.Ray(),
-      box: new THREE.Box3()
+      box: new THREE.Box3(),
+
+      // Test
+      tPositionStatic: new THREE.Vector3(),
+      tLookAt: new THREE.Vector3()
     },
 
     actions: {
@@ -63,12 +71,33 @@ const [useStore, api] = create((set, get) => {
         mutation.clock.start()
         actions.toggleSound(get().sound)
 
+        document.body.addEventListener('keydown', function (ev) {
+          console.log('ev.keyCode', ev.keyCode)
+          if (ev.keyCode === 38 || ev.keyCode === 87 || ev.keyCode === 104) { // W or Up Arrow or 8 keypad
+            mutation.acceleration += 1
+          } else if (ev.keyCode === 40 || ev.keyCode === 83 || ev.keyCode === 98) { // S or Down Arrow or 2 keypad
+            mutation.acceleration -= 1
+          } else if (ev.keyCode === 39 || ev.keyCode === 68 || ev.keyCode === 102) { // D or Right Arrow or 6 keypad
+            mutation.rotation += 1
+          } else if (ev.keyCode === 37 || ev.keyCode === 65 || ev.keyCode === 100) { // A or Left Arrow or 4 keypad
+            mutation.rotation -= 1
+          }
+        }, false)
+
         addEffect(() => {
           const { rocks, enemies } = get()
           const time = Date.now()
           const t = (mutation.t = ((time - mutation.startTime) % mutation.looptime) / mutation.looptime)
-          mutation.position = track.parameters.path.getPointAt(t)
-          mutation.position.multiplyScalar(mutation.scale)
+          if (mutation.acceleration !== 0 || mutation.rotation !== 0) {
+            // This should not do this... it should add to the current vector direction.
+            const incrementX = mutation.postionIncrementDistance * mutation.rotation * mutation.scale
+            const incrementY = 0 // mutation.postionIncrementDistance * mutation.acceleration * mutation.scale
+            const incrementZ = mutation.postionIncrementDistance * -mutation.acceleration * mutation.scale
+            mutation.position = mutation.position.add(new Vector3(incrementX, incrementY, incrementZ)) // track.parameters.path.getPointAt(t)
+            mutation.acceleration = 0
+            mutation.rotation = 0
+            console.log('Adjust position', mutation.position)
+          }
 
           // test for wormhole/warp
           let warping = false
