@@ -8,7 +8,7 @@ import styled from 'styled-components'
 export function Setup({
   children,
   cameraPosition = [-5, 5, 5],
-  far = 10000,
+  far = 20000,
   fov = 70,
   backgroundColor = '#020209',
   controls = true,

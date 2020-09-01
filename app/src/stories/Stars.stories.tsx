@@ -1,6 +1,6 @@
 import React from 'react'
 import { Setup } from '../Setup'
-import { Stars } from '../3d'
+import { Stars } from 'drei'
 import { withKnobs } from '@storybook/addon-knobs'
 
 /*
@@ -15,7 +15,7 @@ export function StarsStory() {
   return (
     <>
       <axesHelper />
-      <Stars />
+      <Stars radius={1000} />
     </>
   )
 }

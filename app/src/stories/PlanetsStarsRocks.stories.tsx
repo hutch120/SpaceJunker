@@ -1,7 +1,8 @@
-import { Planets, Rocks, Stars } from '../3d'
+import { Planets, Rocks } from '../3d'
 import React, { Suspense } from 'react'
 
 import { Setup } from '../Setup'
+import { Stars } from 'drei'
 import { withKnobs } from '@storybook/addon-knobs'
 
 /*
@@ -17,7 +18,7 @@ export function PlanetsStarRocksStory() {
     <>
       <Suspense fallback={null}>
         <Planets />
-        <Stars />
+        <Stars radius={3000} depth={500} />
         <Rocks />
       </Suspense>
     </>
