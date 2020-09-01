@@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import PropTypes from 'prop-types'
 import useStore from '../store/Store'
 
-export default function Rocks () {
+export function Rocks () {
   const gltf = useLoader(GLTFLoader, '/rock.gltf')
   const rocks = useStore(state => state.rocks)
   return rocks.map(data => <RockMemo gltf={gltf} key={data.guid} data={data} />)

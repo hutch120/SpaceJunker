@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 
 import PropTypes from 'prop-types'
 
-export default function Stars ({ count = 2000 }) {
+export function Stars ({ count = 2000 }) {
   const positions = useMemo(() => {
     const positions = []
     for (let i = 0; i < count; i++) {

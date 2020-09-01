@@ -2,9 +2,11 @@ import * as THREE from 'three'
 import * as audio from '../audio'
 
 import { Curves } from 'three/examples/jsm/curves/CurveExtras'
-import { Vector3 } from 'three'
+import { FlyControls } from 'drei'
 import { addEffect } from 'react-three-fiber'
 import create from 'zustand'
+
+// import { Vector3 } from 'three'
 
 let guid = 1
 
@@ -19,6 +21,7 @@ const [useStore, api] = create((set, get) => {
   let cancelLaserTO
   let cancelExplosionTO
   const box = new THREE.Box3()
+  var controls = null
 
   return {
     isPaused, /* Pause at start in development */
@@ -64,40 +67,29 @@ const [useStore, api] = create((set, get) => {
     },
 
     actions: {
-      init (camera) {
+      init (gl, camera) {
         const { mutation, actions } = get()
 
         set({ camera })
         mutation.clock.start()
         actions.toggleSound(get().sound)
 
-        document.body.addEventListener('keydown', function (ev) {
-          console.log('ev.keyCode', ev.keyCode)
-          if (ev.keyCode === 38 || ev.keyCode === 87 || ev.keyCode === 104) { // W or Up Arrow or 8 keypad
-            mutation.acceleration += 1
-          } else if (ev.keyCode === 40 || ev.keyCode === 83 || ev.keyCode === 98) { // S or Down Arrow or 2 keypad
-            mutation.acceleration -= 1
-          } else if (ev.keyCode === 39 || ev.keyCode === 68 || ev.keyCode === 102) { // D or Right Arrow or 6 keypad
-            mutation.rotation += 1
-          } else if (ev.keyCode === 37 || ev.keyCode === 65 || ev.keyCode === 100) { // A or Left Arrow or 4 keypad
-            mutation.rotation -= 1
-          }
-        }, false)
+        controls = new FlyControls(camera, gl.domElement)
+        controls.movementSpeed = 1000
+        controls.domElement = gl.domElement
+        controls.rollSpeed = Math.PI / 24
+        controls.autoForward = false
+        controls.dragToLook = false
 
         addEffect(() => {
+          // https://threejs.org/examples/?q=fly#misc_controls_fly
+          // https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_fly.html
           const { rocks, enemies } = get()
           const time = Date.now()
           const t = (mutation.t = ((time - mutation.startTime) % mutation.looptime) / mutation.looptime)
-          if (mutation.acceleration !== 0 || mutation.rotation !== 0) {
-            // This should not do this... it should add to the current vector direction.
-            const incrementX = mutation.postionIncrementDistance * mutation.rotation * mutation.scale
-            const incrementY = 0 // mutation.postionIncrementDistance * mutation.acceleration * mutation.scale
-            const incrementZ = mutation.postionIncrementDistance * -mutation.acceleration * mutation.scale
-            mutation.position = mutation.position.add(new Vector3(incrementX, incrementY, incrementZ)) // track.parameters.path.getPointAt(t)
-            mutation.acceleration = 0
-            mutation.rotation = 0
-            console.log('Adjust position', mutation.position)
-          }
+
+          var delta = mutation.clock.getDelta()
+          controls.update(delta)
 
           // test for wormhole/warp
           let warping = false
@@ -143,7 +135,7 @@ const [useStore, api] = create((set, get) => {
         playAudio(audio.bg, 1, true)
       },
       updateMouse ({ clientX: x, clientY: y }) {
-        get().mutation.mouse.set(x - window.innerWidth / 2, y - window.innerHeight / 2)
+        // get().mutation.mouse.set(x - window.innerWidth / 2, y - window.innerHeight / 2)
       },
       test (data) {
         box.min.copy(data.offset)
