@@ -41,6 +41,6 @@ export function Setup({
 }
 
 const Container = styled.div`
-  height: 500px;
+  height: 800px;
   width: 100%;
 `
