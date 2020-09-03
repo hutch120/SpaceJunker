@@ -21,3 +21,8 @@ https://codesandbox.io/s/r3f-cannon-instanced-physics-devf8?file=/src/index.js
 
 https://github.com/fangpenlin/avataaars-generator
 https://thisfursonadoesnotexist.com/
+
+https://pixabay.com/
+https://en.wikipedia.org/wiki/Space_debris
+
+https://sketchfab.com/search?q=satellite&sort_by=-relevance&type=models

@@ -14,7 +14,7 @@ const crossMaterial = new THREE.MeshBasicMaterial({ color: hotpink, fog: false }
 const position = new THREE.Vector3()
 const direction = new THREE.Vector3()
 
-export default function Ship () {
+export function Ship ({ initialPosition = [0, 0, 0] }) {
   const gltf = useLoader(GLTFLoader, '/ship.gltf')
   const mutation = useStore(state => state.mutation)
 
@@ -31,6 +31,7 @@ export default function Ship () {
   const target = useRef()
   const { invalidate } = useThree()
 
+  /*
   useEffect(() => {
     if (!isPaused) invalidate()
   }, [isPaused, invalidate])
@@ -40,9 +41,9 @@ export default function Ship () {
     if (main.current) {
       // Gives ship an (annoying) wobble back/forward
       // main.current.position.z = Math.sin(clock.getElapsedTime() * 40) * Math.PI * 0.1
-      main.current.rotation.z += (mouse.x / 500 - main.current.rotation.z) * 0.1
+      main.current.rotation.z += (mouse.x / 500 - main.current.rotation.z) * 0.5
 
-      main.current.rotation.x += (-mouse.y / 1200 - main.current.rotation.x) * 0.1
+      main.current.rotation.x += (-mouse.y / 1200 - main.current.rotation.x) * 5.2
       main.current.position.x += (mouse.x / 10 - main.current.position.x) * 0.1
 
       main.current.rotation.y += (-mouse.x / 1200 - main.current.rotation.y) * 0.1
@@ -68,10 +69,10 @@ export default function Ship () {
       target.current.visible = !!mutation.hits
     }
     if (!isPaused) invalidate()
-  })
+  }) */
 
   return (
-    <group ref={main}>
+    <group ref={main} position={initialPosition}>
       <group scale={[3.5, 3.5, 3.5]}>
         <group ref={cross} position={[0, 0, -300]} name="cross">
           <mesh renderOrder={1000} material={crossMaterial}>
@@ -81,6 +82,7 @@ export default function Ship () {
             <boxBufferGeometry attach="geometry" args={[2, 20, 2]} />
           </mesh>
         </group>
+        {/*
         <group ref={target} position={[0, 0, -300]} name="target">
           <mesh position={[0, 20, 0]} renderOrder={1000} material={crossMaterial}>
             <boxBufferGeometry attach="geometry" args={[40, 2, 2]} />
@@ -95,7 +97,8 @@ export default function Ship () {
             <boxBufferGeometry attach="geometry" args={[2, 40, 2]} />
           </mesh>
         </group>
-        <pointLight ref={laserLight} position={[0, 0, -20]} distance={100} intensity={0} color="lightgreen" />
+        */}
+        <pointLight ref={laserLight} position={[0, 0, -20]} distance={100} intensity={20} color="lightgreen" />
         <group ref={laserGroup}>
           {lasers.map((t, i) => (
             <group key={i}>

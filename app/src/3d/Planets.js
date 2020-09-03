@@ -26,7 +26,7 @@ export function Planets () {
   const [texture, moon] = useLoader(THREE.TextureLoader, [earthImg, moonImg])
   return (
     <Physics>
-      <group scale={[100, 100, 100]} position={[-500, -500, 1000]}>
+      <group scale={[100, 100, 100]} position={[0, 0, 0]}>
         <mesh ref={earthRef}>
           <sphereBufferGeometry attach="geometry" args={[5, 32, 32]} />
           <meshStandardMaterial attach="material" map={texture} roughness={1} fog={false} />

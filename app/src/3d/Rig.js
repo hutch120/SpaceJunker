@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import useStore from '../store/Store'
 
 let offset = 0
-export default function Rig ({ children }) {
+export function Rig ({ children }) {
   const group = useRef()
   const rig = useRef()
   const mutation = useStore(state => state.mutation)
@@ -39,7 +39,7 @@ export default function Rig ({ children }) {
 
   return (
     <group ref={group}>
-      <pointLight distance={400} position={[0, 100, -420]} intensity={5} color="indianred" />
+      <pointLight distance={400} position={[0, 100, -420]} intensity={18} color="indianred" />
       <group ref={rig} position={[0, 0, -50]}>
         {children}
       </group>

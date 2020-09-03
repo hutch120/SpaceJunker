@@ -15,9 +15,37 @@ if (process.env.NODE_ENV === 'production') {
   isPaused = false
 }
 
+function EllipseCurve (xRadius, yRadius, scale) {
+  THREE.Curve.call(this)
+
+  this.scale = (scale === undefined) ? 5 : scale
+  // add the desired properties
+  this.xRadius = xRadius
+  this.yRadius = yRadius
+}
+
+EllipseCurve.prototype = Object.create(THREE.Curve.prototype)
+EllipseCurve.prototype.constructor = EllipseCurve
+
+EllipseCurve.prototype.getPoint = function (t, optionalTarget) {
+  var point = optionalTarget || new THREE.Vector3()
+
+  var radians = 2 * Math.PI * t
+
+  var x = this.xRadius * Math.cos(radians)
+  var y = this.yRadius * Math.sin(radians)
+  var z = 0
+
+  return point.set(x, y, z).multiplyScalar(this.scale)
+}
+
 const [useStore, api] = create((set, get) => {
   const spline = new Curves.GrannyKnot()
   const track = new THREE.TubeBufferGeometry(spline, 250, 0.2, 10, true)
+
+  const ellipse = new EllipseCurve(50, 50, 1)
+  const satelliteTrack = new THREE.TubeBufferGeometry(ellipse, 250, 0.2, 10, true)
+
   let cancelLaserTO
   let cancelExplosionTO
   const box = new THREE.Box3()
@@ -34,6 +62,7 @@ const [useStore, api] = create((set, get) => {
     lasers: [],
     explosions: [],
     rocks: randomData(100, track, 150, 8, () => 1 + Math.random() * 2.5),
+    satellites: randomData(500, satelliteTrack, 150, 8, () => 1 + Math.random() * 2.5),
     enemies: randomData(10, track, 20, 15, 1),
 
     mutation: {
@@ -45,6 +74,7 @@ const [useStore, api] = create((set, get) => {
       startTime: Date.now(),
 
       track,
+      satelliteTrack,
       scale: 15,
       fov: 70,
       hits: false,
@@ -74,22 +104,24 @@ const [useStore, api] = create((set, get) => {
         mutation.clock.start()
         actions.toggleSound(get().sound)
 
+        /*
         controls = new FlyControls(camera, gl.domElement)
         controls.movementSpeed = 1000
         controls.domElement = gl.domElement
         controls.rollSpeed = Math.PI / 24
         controls.autoForward = false
         controls.dragToLook = false
+        */
 
         addEffect(() => {
           // https://threejs.org/examples/?q=fly#misc_controls_fly
           // https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_fly.html
-          const { rocks, enemies } = get()
+          const { rocks, satellites, enemies } = get()
           const time = Date.now()
           const t = (mutation.t = ((time - mutation.startTime) % mutation.looptime) / mutation.looptime)
 
           var delta = mutation.clock.getDelta()
-          controls.update(delta)
+          // controls.update(delta)
 
           // test for wormhole/warp
           let warping = false
@@ -102,8 +134,9 @@ const [useStore, api] = create((set, get) => {
 
           // test for hits
           const r = rocks.filter(actions.test)
+          const s = satellites.filter(actions.test)
           const e = enemies.filter(actions.test)
-          const a = r.concat(e)
+          const a = r.concat(e).concat(s)
           const previous = mutation.hits
           mutation.hits = a.length
           if (previous === 0 && mutation.hits) playAudio(audio.click)
@@ -116,6 +149,7 @@ const [useStore, api] = create((set, get) => {
             set(state => ({
               points: state.points + r.length * 100 + e.length * 200,
               rocks: state.rocks.filter(rock => !r.find(r => r.guid === rock.guid)),
+              satellites: state.satellites.filter(satellite => !s.find(s => s.guid === satellite.guid)),
               enemies: state.enemies.filter(enemy => !e.find(e => e.guid === enemy.guid))
             }))
           }

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 export function Setup({
   children,
-  cameraPosition = [-5, 5, 5],
+  cameraPosition = [0, 0, 100],
   far = 20000,
   fov = 70,
   backgroundColor = '#020209',
@@ -32,7 +32,7 @@ export function Setup({
         }}
       >
         {children}
-        <ambientLight intensity={0.1} />
+        <ambientLight intensity={0.3} />
         <pointLight intensity={1} position={[0, 6, 0]} />
         {controls && <OrbitControls />}
       </Canvas>
