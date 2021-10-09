@@ -19,7 +19,7 @@ const glowMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color('light
 const DroneMemo = React.memo(Drone)
 function Drone ({ data }) {
   const { clock } = useStore(state => state.mutation)
-  const gltf = useLoader(GLTFLoader, '/drone.gltf')
+  const gltf = useLoader(GLTFLoader, 'drone.gltf')
   const ref = useRef()
 
   useFrame(() => {

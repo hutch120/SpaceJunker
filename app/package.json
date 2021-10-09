@@ -2,6 +2,7 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://hutch120.github.io/SpaceJunker",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^10.4.9",
@@ -13,6 +14,7 @@
     "@types/styled-components": "^5.1.2",
     "avataaars": "^1.2.1",
     "drei": "^1.4.0-alpha.0",
+    "gh-pages": "^3.2.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
@@ -59,7 +61,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6007 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "deploy": "yarn build-storybook && gh-pages -b gh-deploy -d storybook-static"
   },
   "eslintConfig": {
     "extends": "react-app"

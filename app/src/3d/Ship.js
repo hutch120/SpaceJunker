@@ -15,7 +15,7 @@ const position = new THREE.Vector3()
 const direction = new THREE.Vector3()
 
 export function Ship ({ initialPosition = [0, 0, 0], showCross = false, showTarget = false }) {
-  const gltf = useLoader(GLTFLoader, '/ship.gltf')
+  const gltf = useLoader(GLTFLoader, 'ship.gltf')
   const mutation = useStore(state => state.mutation)
 
   const isPaused = useStore(state => state.isPaused)

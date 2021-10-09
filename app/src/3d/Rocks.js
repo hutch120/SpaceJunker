@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import useStore from '../store/Store'
 
 export function Rocks () {
-  const gltf = useLoader(GLTFLoader, '/rock.gltf')
+  const gltf = useLoader(GLTFLoader, 'rock.gltf')
   const rocks = useStore(state => state.rocks)
   return rocks.map(data => <RockMemo gltf={gltf} key={data.guid} data={data} />)
 }
