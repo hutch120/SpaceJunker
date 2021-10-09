@@ -1,3 +1,5 @@
+import * as THREE from 'three'
+
 import React, { useRef } from 'react'
 import { useFrame, useLoader } from 'react-three-fiber'
 
@@ -22,15 +24,20 @@ function Satellite ({ gltf, data }) {
 
   const scale = 0.5
   return (
-    <group ref={ref} position={data.offset} scale={[scale, scale, scale]}>
+    <group ref={ref} position={new THREE.Vector3(0, 0, 0)} scale={[scale, scale, scale]}>
       <object3D
-        position={[-0.016298329457640648, -0.012838120572268963, 0.24073271453380585]}
-        rotation={[3.0093872578726644, 0.27444228385461117, -0.22745113653772078]}
-        scale={[20, 20, 20]}>
+        position={[0, 0, 0]}
+        rotation={[0, 0, 0]}
+        scale={[100, 100, 100]}>
         {gltf.__$.map((node, index) => GetMesh(node, index))}
       </object3D>
     </group>
   )
+}
+
+Satellite.propTypes = {
+  gltf: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired
 }
 
 function GetMesh (node, index) {

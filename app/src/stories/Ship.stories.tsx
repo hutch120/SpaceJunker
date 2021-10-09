@@ -23,7 +23,7 @@ export default {
   decorators: [
     withKnobs,
     (storyFn: Function) => (
-      <Setup cameraPosition={[0, 0, 100]}>{storyFn()}</Setup>
+      <Setup cameraPosition={[40, 30, 50]}>{storyFn()}</Setup>
     ),
   ],
 }

@@ -11,7 +11,7 @@ export function FlyControlsStory() {
       <FlyControls
         autoForward={boolean('AutoForward', false)}
         dragToLook={boolean('DragToLook', false)}
-        movementSpeed={number('MovementSpeed', 2.0)}
+        movementSpeed={number('MovementSpeed', 100.0)}
         rollSpeed={number('RollSpeed', 0.4)}
       />
       <Box>

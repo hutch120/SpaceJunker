@@ -20,7 +20,7 @@ export function PlanetsStarRocksStory() {
       <FlyControls
         autoForward={boolean('AutoForward', false)}
         dragToLook={boolean('DragToLook', false)}
-        movementSpeed={number('MovementSpeed', 500.0)}
+        movementSpeed={number('MovementSpeed', 100.0)}
         rollSpeed={number('RollSpeed', 0.4)}
       />
       <Suspense fallback={null}>

@@ -14,11 +14,11 @@ export function SatellitesStory() {
       <FlyControls
         autoForward={boolean('AutoForward', false)}
         dragToLook={boolean('DragToLook', false)}
-        movementSpeed={number('MovementSpeed', 500.0)}
+        movementSpeed={number('MovementSpeed', 300.0)}
         rollSpeed={number('RollSpeed', 0.4)}
       />
-      <Ship initialPosition={[0, 1000, 0]} />
       <Suspense fallback={null}>
+        <Ship initialPosition={[0, 1000, 0]} />
         {includePlanets ? <Planets /> : null}
         <Satellites />
       </Suspense>
@@ -36,7 +36,7 @@ export default {
     withKnobs,
     (storyFn: Function) => (
       // red, green, blue (use axesHelper to help adjust)
-      <Setup cameraPosition={[0, 0, 4000]} controls={false}>
+      <Setup cameraPosition={[0, 0, 10]} controls={false}>
         {storyFn()}
       </Setup>
     ),

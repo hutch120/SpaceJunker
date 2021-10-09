@@ -14,7 +14,7 @@ const crossMaterial = new THREE.MeshBasicMaterial({ color: hotpink, fog: false }
 const position = new THREE.Vector3()
 const direction = new THREE.Vector3()
 
-export function Ship ({ initialPosition = [0, 0, 0] }) {
+export function Ship ({ initialPosition = [0, 0, 0], showCross = false, showTarget = false }) {
   const gltf = useLoader(GLTFLoader, '/ship.gltf')
   const mutation = useStore(state => state.mutation)
 
@@ -74,30 +74,33 @@ export function Ship ({ initialPosition = [0, 0, 0] }) {
   return (
     <group ref={main} position={initialPosition}>
       <group scale={[3.5, 3.5, 3.5]}>
-        <group ref={cross} position={[0, 0, -300]} name="cross">
-          <mesh renderOrder={1000} material={crossMaterial}>
-            <boxBufferGeometry attach="geometry" args={[20, 2, 2]} />
-          </mesh>
-          <mesh renderOrder={1000} material={crossMaterial}>
-            <boxBufferGeometry attach="geometry" args={[2, 20, 2]} />
-          </mesh>
-        </group>
-        {/*
-        <group ref={target} position={[0, 0, -300]} name="target">
-          <mesh position={[0, 20, 0]} renderOrder={1000} material={crossMaterial}>
-            <boxBufferGeometry attach="geometry" args={[40, 2, 2]} />
-          </mesh>
-          <mesh position={[0, -20, 0]} renderOrder={1000} material={crossMaterial}>
-            <boxBufferGeometry attach="geometry" args={[40, 2, 2]} />
-          </mesh>
-          <mesh position={[20, 0, 0]} renderOrder={1000} material={crossMaterial}>
-            <boxBufferGeometry attach="geometry" args={[2, 40, 2]} />
-          </mesh>
-          <mesh position={[-20, 0, 0]} renderOrder={1000} material={crossMaterial}>
-            <boxBufferGeometry attach="geometry" args={[2, 40, 2]} />
-          </mesh>
-        </group>
-        */}
+        {showCross ? (
+          <group ref={cross} position={[0, 0, -300]} name="cross">
+            <mesh renderOrder={1000} material={crossMaterial}>
+              <boxBufferGeometry attach="geometry" args={[20, 2, 2]} />
+            </mesh>
+            <mesh renderOrder={1000} material={crossMaterial}>
+              <boxBufferGeometry attach="geometry" args={[2, 20, 2]} />
+            </mesh>
+          </group>
+        ) : null
+        }
+        {showTarget ? (
+          <group ref={target} position={[0, 0, -300]} name="target">
+            <mesh position={[0, 20, 0]} renderOrder={1000} material={crossMaterial}>
+              <boxBufferGeometry attach="geometry" args={[40, 2, 2]} />
+            </mesh>
+            <mesh position={[0, -20, 0]} renderOrder={1000} material={crossMaterial}>
+              <boxBufferGeometry attach="geometry" args={[40, 2, 2]} />
+            </mesh>
+            <mesh position={[20, 0, 0]} renderOrder={1000} material={crossMaterial}>
+              <boxBufferGeometry attach="geometry" args={[2, 40, 2]} />
+            </mesh>
+            <mesh position={[-20, 0, 0]} renderOrder={1000} material={crossMaterial}>
+              <boxBufferGeometry attach="geometry" args={[2, 40, 2]} />
+            </mesh>
+          </group>) : null
+        }
         <pointLight ref={laserLight} position={[0, 0, -20]} distance={100} intensity={20} color="lightgreen" />
         <group ref={laserGroup}>
           {lasers.map((t, i) => (
